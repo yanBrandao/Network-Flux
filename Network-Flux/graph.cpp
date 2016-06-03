@@ -54,3 +54,19 @@ void Graph::show(){
     cout << endl;
     
 }
+
+int Graph::getAdjWeight(int v, int adj){
+    int rtn = -1;
+    vector<node>::iterator it;
+    vector<node*>::iterator jt;
+    for (it = this->nodes.begin(); it != end(nodes); it++) {
+        if (it->value == v) {
+            for (jt = it->neighbors.begin(); jt < end(it->neighbors); jt++) {
+                if ((*jt)->value == adj) {
+                    rtn = (*jt)->weight;
+                }
+            }
+        }
+    }
+    return  rtn;
+}

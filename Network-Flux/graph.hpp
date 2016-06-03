@@ -23,11 +23,12 @@ public:
 };
 
 class Graph{
-    vector<node> nodes;
 public:
+    vector<node> nodes;
     void init();
     void show();
     void add(int v, int weight, int adj);
+    int getAdjWeight(int v, int adj);
 };
 
 #endif /* graph_hpp */
