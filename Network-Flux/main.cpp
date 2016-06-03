@@ -1,6 +1,6 @@
 //
 //  main.cpp
-//  Fluxo-de-Redes
+//  Network-Flux
 //
 //  Created by Yan Brandão Diniz on 5/30/16.
 //  Copyright © 2016 UFAM. All rights reserved.
@@ -16,15 +16,15 @@
 #include <vector>
 #include <math.h>
 #include "graph.hpp"
+#include "read_file.hpp"
 
 using namespace std;
 
 int main(int argc, const char * argv[]) {
     
     Graph g = *new Graph();
-    
-    g.add(13, 2, 5);
-    g.add(14, 2, 5);
+    ReadFile rf = *new ReadFile();
+    rf.read_file().show();
     
     return 0;
 }

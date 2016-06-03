@@ -11,12 +11,12 @@
 using namespace std;
 
 Graph ReadFile::read_file(){
-    Graph G;
+    Graph G = *new Graph();
     
     string line, buff;
     ifstream file;
     
-    file.open("/Users/yanbrandao/Developer/Fluxo-de-Redes/Fluxo-de-Redes/files/amazon0302.txt");
+    file.open("/Users/yanbrandao/Developer/Network-Flux/Network-Flux/files/graph-products.txt");
     if (file.is_open()) {
         while (getline(file, line)) {
             stringstream ss(line);
@@ -24,10 +24,7 @@ Graph ReadFile::read_file(){
             while (ss >> buff) {
                 tokens.push_back(buff);
             }
-            for (int i = 0; i < tokens.size(); i++) {
-                cout << tokens.at(i) << " ";
-            }
-            cout << endl;
+            G.add(stoi(tokens.at(0)), stoi(tokens.at(1)), stoi(tokens.at(2)));
         }
         file.close();
     }else{

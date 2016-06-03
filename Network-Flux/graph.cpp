@@ -14,16 +14,43 @@ void Graph::init(){
 }
 
 void Graph::add(int v, int weight, int adj){
-    node nodeN = *new node();
-    node nodeAdj = *new node();
-    nodeAdj.value = adj;
-    nodeN.value = v;
-    nodeN.neighbors = *new vector<node*>();
-    nodeN.neighbors.push_back(&nodeAdj);
+    int verify = 0;
+    //Verification if this vertex is already added.
+    for (auto it = begin(this->nodes); it != end(this->nodes); it++) {
+        if (v == it->value) {
+            node* nodeAdj = new node();
+            nodeAdj->value = adj;
+            nodeAdj->weight = weight;
+            (*it).neighbors.push_back(nodeAdj);
+            verify = 1;
+        }
+    }
+    if (verify != 1) {
+        node* nodeN = new node();
+        node* nodeAdj = new node();
+        nodeAdj->value = adj;
+        nodeAdj->weight = weight;
+        nodeN->value = v;
+        nodeN->weight = -1; //Root node.
+        nodeN->neighbors = *new vector<node*>();
+        nodeN->neighbors.push_back(nodeAdj);
+        
+        nodes.push_back(*nodeN);
+    }
     
-    nodes.push_back(nodeN);
 }
 
 void Graph::show(){
-    //iterator<<#class _Category#>, <#class _Tp#>>
+    vector<node>::iterator it;
+    vector<node*> neihbors;
+    vector<node*>::iterator jt;
+    for (it = this->nodes.begin(); it != end(nodes); it++) {
+        cout <<  it->value << ' ';
+        neihbors = it->neighbors;
+        for (jt = neihbors.begin(); jt != end(neihbors); jt++) {
+            cout << "{ [" << (*jt)->value << ", " << (*jt)->weight << "] } ";
+        }
+    }
+    cout << endl;
+    
 }

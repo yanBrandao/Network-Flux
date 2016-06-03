@@ -18,6 +18,7 @@ using namespace std;
 class node{
 public:
     int value;
+    int weight;
     vector<node*> neighbors;
 };
 
