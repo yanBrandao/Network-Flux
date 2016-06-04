@@ -51,20 +51,30 @@ bool breathSearch(Graph g, int begin, int end, vector<int> *path){
 
 int main(int argc, const char * argv[]) {
     
+    string pathFile = "/Users/yanbrandao/Developer/Network-Flux/Network-Flux/files/File";
+    vector<pair<int, string>> *clientTranslate = new vector<pair<int, string>>();
+    vector<pair<pair<int,int>, string>> *clientVotes = new vector<pair<pair<int,int>, string>>();
     vector<int> *path = new vector<int>();
     Graph g = *new Graph();
     ReadFile rf = *new ReadFile();
-    g = rf.read_file();
+    
+    g = rf.read_file(pathFile, clientTranslate, clientVotes);
     
     g.show();
     for (int i ; i < g.nodes.size(); i++) {
         path->push_back(0);
     }
     cout << "Path size: " << path->size() << endl;
-    cout << "Weight from 7 to 12: " << g.getAdjWeight(7, 12) << endl;
     cout << "BreathSearch: " << breathSearch(g, 0, 9, path) << endl;
     for (int i = 0; i < path->size(); i++) {
         cout << "[" << path->at(i) << "]";
+    }
+    cout << "Votes for products: " << endl;
+    cout << "[C][P] - votes" << endl;
+    for (int i = 0; i < clientVotes->size(); i++) {
+        cout << "[" << clientVotes->at(i).first.first << "]";
+        cout << "[" << clientVotes->at(i).first.second << "]";
+        cout << " - " << clientVotes->at(i).second << endl;
     }
     cout << endl;
     return 0;

@@ -19,7 +19,7 @@
 
 class ReadFile{
 public:
-    Graph read_file();
+    Graph read_file(string filePath, vector<pair<int, string>> *clientTranslate, vector<pair<pair<int,int>, string>> *clientVotes);
 };
 
 
