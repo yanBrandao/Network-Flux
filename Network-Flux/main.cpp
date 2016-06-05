@@ -86,9 +86,19 @@ bool breathSearch(Graph g, int begin, int end, vector<pair<int,int> > *path){
 
 /*Returns max_flow from Graph g, from source 's' to target 't'
  doing bfs to find the path while there's a edge more then 0. */
-int fordFulkerson(Graph *g, int s, int t){
+int fordFulkerson(Graph *g, int s, int t, float pLimit){
     int max_flow = 0;
     vector<pair<int, int> > *path = new vector<pair<int, int> >();
+    
+    for(auto it = g->nodes.begin(); it != g->nodes.end(); it ++){
+        if (it->value == 0) {
+            for (int i = 0; i < it->neighbors.size(); i++) {
+                cout << it->value << "[ " << it->neighbors.at(i)->weight << " * " << pLimit << " ] = " << ceil(it->neighbors.at(i)->weight * pLimit) << endl;
+                it->neighbors.at(i)->weight = ceil(it->neighbors.at(i)->weight * pLimit);
+            }
+        }
+        
+    }
     
     while(breathSearch((*g), source, target, path)){
         int path_flow = INT32_MAX;
@@ -130,6 +140,7 @@ int fordFulkerson(Graph *g, int s, int t){
 int main(int argc, const char * argv[]) {
     
     string pathFile = argv[1];
+    //string pathFile = "/Users/yanbrandao/Developer/Network-Flux/Network-Flux/files/less_input.txt";
     vector<pair<int, string> > *clientTranslate = new vector<pair<int, string> >();
     vector<pair<pair<int,int>, string> > *clientVotes = new vector<pair<pair<int,int>, string> >();
     
@@ -168,7 +179,7 @@ int main(int argc, const char * argv[]) {
     //g.show();
     
     
-    cout << fordFulkerson(&g, source, target) << endl;
+    cout << fordFulkerson(&g, source, target, atoi(argv[2])) << endl;
     
     g.show();
 
