@@ -84,7 +84,8 @@ bool breathSearch(Graph g, int begin, int end, vector<pair<int,int>> *path){
     return rtn;
 }
 
-
+/*Returns max_flow from Graph g, from source 's' to target 't'
+ doing bfs to find the path while there's a edge more then 0. */
 int fordFulkerson(Graph *g, int s, int t){
     int max_flow = 0;
     vector<pair<int, int>> *path = new vector<pair<int, int>>();
@@ -169,7 +170,7 @@ int main(int argc, const char * argv[]) {
     
     cout << fordFulkerson(&g, source, target) << endl;
     
-    //g.show();
+    g.show();
 
     
     return 0;
