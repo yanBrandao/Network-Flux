@@ -32,31 +32,28 @@ Graph ReadFile::read_file(string filePath, vector<pair<int, string>> *clientTran
                 if (tokens.at(0).find("Id:") != string::npos) {
                     id = stoi(tokens.at(1));
                 }
-                cout << "id: " << id << endl;
             }
             
             if (tokens.size() > 2) {
                 
                 if(tokens.at(1).find("cutomer") != string::npos){
                     pair<int, string> element = *new pair<int, string>(client_inc, tokens.at(2));
-                    pair<pair<int, int>, string> votes = *new pair<pair<int, int>, string>(*new pair<int,int>(id, client_inc), tokens.at(6));
+                    pair<pair<int, int>, string> votes = *new pair<pair<int, int>, string>(*new pair<int,int>(client_inc, id), tokens.at(6));
                     for (auto it = clientTranslate->begin(); it != clientTranslate->end(); it++) {
-                        
                         if (!tokens.at(2).compare(it->second)) {
                             client_id = it->first;
                             votes.first.second = client_id;
                             verify = 1;
                         }
-                        
                     }
                     if (verify == 0) {
                         client_id = client_inc;
-                        votes.first.second = client_id;
+                        votes.first.first = client_id;
                         clientTranslate->push_back(element);
                         clientVotes->push_back(votes);
                         client_inc--;
                     }
-                    G.add(id, 1, client_id);
+                    G.add(client_id, 1, id);
                     
                     verify = 0;
                 }

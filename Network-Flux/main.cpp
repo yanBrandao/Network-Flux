@@ -21,61 +21,156 @@
 
 using namespace std;
 
-bool breathSearch(Graph g, int begin, int end, vector<int> *path){
-    vector<bool> visited = *new vector<bool>();
-    for (int it = 0; it < g.nodes.size(); it++)
-        visited.push_back(false);
+#define source 0
+#define target 999999
+
+void addProductVector(vector<pair<int, int>> *pv, int product, int weight){
+    int verify = 0;
+    for (int i = 0; i < pv->size(); i++) {
+        if (product == pv->at(i).first) {
+            pv->at(i).second += weight;
+            verify = 1;
+        }
+    }
+    if (!verify) {
+        pv->push_back(*new pair<int, int>(product, weight));
+    }
+}
+
+
+
+/*Returns true if there is a path from source 's' to sink 't' in
+graph g. Also fills vector path to store the path */
+bool breathSearch(Graph g, int begin, int end, vector<pair<int,int>> *path){
+    bool rtn = false;
+    vector<pair<bool, int>> *visited = new vector<pair<bool,int>>();
+    for (int it = 0; it < g.nodes.size(); it++){
+        visited->push_back(*new pair<bool, int> (false, g.nodes.at(it).value));
+    }
     
     queue<int> q;
     q.push(begin);
-    visited.at(begin) = true;
-    path->at(begin) = -1;
+    for (int i = 0; i < visited->size(); i++) {
+        if (visited->at(i).second == begin) {
+            visited->at(i).first = true;
+            path->push_back(*new pair<int, int>(0, visited->at(i).second));
+        }
+    }
     
     while (!q.empty()) {
         int u = q.front();
-        int uv = u;
         q.pop();
-        cout << u << endl;
-        for (int v = 0; v < g.nodes.size(); v++) {
-            if (visited.at(v) == false && (g.getAdjWeight(uv, (v+10)) > 0)) {
-                q.push(v);
-                cout << "[ "<< u << " ]";
-                path->at(v) = u;
-                visited.at(v) = true;
+        for (auto it = g.nodes.begin(); it != g.nodes.end(); it++) {
+            if (it->value == u) {
+                for (int jt = 0; jt < it->neighbors.size(); jt++) {
+                    for (int i = 0; i < visited->size(); i++) {
+                        if (visited->at(i).second == it->neighbors.at(jt)->value) {
+                            if (visited->at(i).first == false && (it->neighbors.at(jt)->weight > 0)) {
+                                q.push(it->neighbors.at(jt)->value);
+                                visited->at(i).first = true;
+                                path->push_back(*new pair<int, int>(u, it->neighbors.at(jt)->value));
+                            }
+                        }
+                    }
+                }
             }
         }
-        cout << endl;
     }
-    return visited.at(end);
+    for (int i = 0; i < visited->size(); i++) {
+        if (visited->at(i).second == end) {
+            rtn = visited->at(i).first;
+        }
+    }
+    return rtn;
+}
+
+
+int fordFulkerson(Graph *g, int s, int t){
+    int max_flow = 0;
+    vector<pair<int, int>> *path = new vector<pair<int, int>>();
+    
+    while(breathSearch((*g), source, target, path)){
+        int path_flow = INT32_MAX;
+        
+        for (int i = 1; i < path->size(); i++) {
+            for (auto it = g->nodes.begin(); it != g->nodes.end() ; it++) {
+                if (path->at(i).first == it->value) {
+                    for (int j = 0; j < it->neighbors.size(); j++){
+                        if (path->at(i).second == it->neighbors.at(j)->value) {
+                            path_flow = min(path_flow, it->neighbors.at(j)->weight);
+                        }
+                    }
+                }
+            }
+        }
+        
+        for (int i = 1; i < path->size(); i++) {
+            for (auto it = g->nodes.begin(); it != g->nodes.end() ; it++) {
+                if (path->at(i).first == it->value) {
+                    for (int j = 0; j < it->neighbors.size(); j++){
+                        if (path->at(i).second == it->neighbors.at(j)->value) {
+                            it->neighbors.at(j)->weight -= path_flow;
+                        }
+                    }
+                }
+            }
+        }
+        
+        /*for (int i = 0; i < path->size(); i++) {
+            cout << "[" << path->at(i).first << ", " << path->at(i).second  << "]";
+        }
+        cout << endl;*/
+        max_flow += path_flow;
+        path = new vector<pair<int, int>>();
+    }
+    return max_flow;
 }
 
 int main(int argc, const char * argv[]) {
     
-    string pathFile = "/Users/yanbrandao/Developer/Network-Flux/Network-Flux/files/File";
+    string pathFile = "/Users/yanbrandao/Developer/Network-Flux/Network-Flux/files/File.txt";
     vector<pair<int, string>> *clientTranslate = new vector<pair<int, string>>();
     vector<pair<pair<int,int>, string>> *clientVotes = new vector<pair<pair<int,int>, string>>();
-    vector<int> *path = new vector<int>();
+    
     Graph g = *new Graph();
     ReadFile rf = *new ReadFile();
     
     g = rf.read_file(pathFile, clientTranslate, clientVotes);
     
-    g.show();
-    for (int i ; i < g.nodes.size(); i++) {
-        path->push_back(0);
+    /*----------Adding vertex sourcing----------*/
+    for (auto it = g.nodes.begin(); it != g.nodes.end(); it++) {
+        int increment = 0;
+        if (it->value == 0) {
+            continue;
+        }
+        for (auto jt = clientVotes->begin(); jt != clientVotes->end(); jt++) {
+            if (jt->first.first == it->value) {
+                increment += stoi(jt->second);
+            }
+        }
+        g.add(source, increment, it->value);
     }
-    cout << "Path size: " << path->size() << endl;
-    cout << "BreathSearch: " << breathSearch(g, 0, 9, path) << endl;
-    for (int i = 0; i < path->size(); i++) {
-        cout << "[" << path->at(i) << "]";
+    /*-----------------------------------------*/
+    
+    
+    /*----------Adding vertex target----------*/
+    vector<pair<int, int>> *productVector = new vector<pair<int, int>>();
+    for (int k = 0; k < clientVotes->size(); k++) {
+        addProductVector(productVector, clientVotes->at(k).first.second, stoi(clientVotes->at(k).second));
     }
-    cout << "Votes for products: " << endl;
-    cout << "[C][P] - votes" << endl;
-    for (int i = 0; i < clientVotes->size(); i++) {
-        cout << "[" << clientVotes->at(i).first.first << "]";
-        cout << "[" << clientVotes->at(i).first.second << "]";
-        cout << " - " << clientVotes->at(i).second << endl;
+    for (int i = 0; i < productVector->size(); i++) {
+        g.add(productVector->at(i).first, productVector->at(i).second, target);
     }
-    cout << endl;
+    g.add(target, 0, source);
+    /*----------------------------------------*/
+    
+    //g.show();
+    
+    
+    cout << fordFulkerson(&g, source, target) << endl;
+    
+    //g.show();
+
+    
     return 0;
 }

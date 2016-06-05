@@ -50,6 +50,7 @@ void Graph::show(){
         for (jt = neihbors.begin(); jt != end(neihbors); jt++) {
             cout << "{ [" << (*jt)->value << ", " << (*jt)->weight << "] } ";
         }
+        cout << endl;
     }
     cout << endl;
     
