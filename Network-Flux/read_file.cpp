@@ -38,7 +38,7 @@
 
 using namespace std;
 
-Graph ReadFile::read_file(string filePath, vector<pair<int, string>> *clientTranslate, vector<pair<pair<int,int>, string>> *clientVotes){
+Graph ReadFile::read_file(string filePath, vector<pair<int, string> > *clientTranslate, vector<pair<pair<int,int>, string> > *clientVotes){
     Graph G = *new Graph();
     
     string line, buff;

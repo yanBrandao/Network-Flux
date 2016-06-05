@@ -24,7 +24,7 @@ using namespace std;
 #define source 0
 #define target 999999
 
-void addProductVector(vector<pair<int, int>> *pv, int product, int weight){
+void addProductVector(vector<pair<int, int> > *pv, int product, int weight){
     int verify = 0;
     for (int i = 0; i < pv->size(); i++) {
         if (product == pv->at(i).first) {
@@ -41,9 +41,9 @@ void addProductVector(vector<pair<int, int>> *pv, int product, int weight){
 
 /*Returns true if there is a path from source 's' to sink 't' in
 graph g. Also fills vector path to store the path */
-bool breathSearch(Graph g, int begin, int end, vector<pair<int,int>> *path){
+bool breathSearch(Graph g, int begin, int end, vector<pair<int,int> > *path){
     bool rtn = false;
-    vector<pair<bool, int>> *visited = new vector<pair<bool,int>>();
+    vector<pair<bool, int> > *visited = new vector<pair<bool,int> >();
     for (int it = 0; it < g.nodes.size(); it++){
         visited->push_back(*new pair<bool, int> (false, g.nodes.at(it).value));
     }
@@ -88,7 +88,7 @@ bool breathSearch(Graph g, int begin, int end, vector<pair<int,int>> *path){
  doing bfs to find the path while there's a edge more then 0. */
 int fordFulkerson(Graph *g, int s, int t){
     int max_flow = 0;
-    vector<pair<int, int>> *path = new vector<pair<int, int>>();
+    vector<pair<int, int> > *path = new vector<pair<int, int> >();
     
     while(breathSearch((*g), source, target, path)){
         int path_flow = INT32_MAX;
@@ -122,16 +122,16 @@ int fordFulkerson(Graph *g, int s, int t){
         }
         cout << endl;*/
         max_flow += path_flow;
-        path = new vector<pair<int, int>>();
+        path = new vector<pair<int, int> >();
     }
     return max_flow;
 }
 
 int main(int argc, const char * argv[]) {
     
-    string pathFile = "/Users/yanbrandao/Developer/Network-Flux/Network-Flux/files/File.txt";
-    vector<pair<int, string>> *clientTranslate = new vector<pair<int, string>>();
-    vector<pair<pair<int,int>, string>> *clientVotes = new vector<pair<pair<int,int>, string>>();
+    string pathFile = argv[1];
+    vector<pair<int, string> > *clientTranslate = new vector<pair<int, string> >();
+    vector<pair<pair<int,int>, string> > *clientVotes = new vector<pair<pair<int,int>, string> >();
     
     Graph g = *new Graph();
     ReadFile rf = *new ReadFile();
@@ -155,7 +155,7 @@ int main(int argc, const char * argv[]) {
     
     
     /*----------Adding vertex target----------*/
-    vector<pair<int, int>> *productVector = new vector<pair<int, int>>();
+    vector<pair<int, int> > *productVector = new vector<pair<int, int> >();
     for (int k = 0; k < clientVotes->size(); k++) {
         addProductVector(productVector, clientVotes->at(k).first.second, stoi(clientVotes->at(k).second));
     }
