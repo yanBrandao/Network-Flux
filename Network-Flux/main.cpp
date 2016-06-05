@@ -179,7 +179,7 @@ int main(int argc, const char * argv[]) {
     //g.show();
     
     
-    cout << fordFulkerson(&g, source, target, atoi(argv[2])) << endl;
+    cout << fordFulkerson(&g, source, target, atof(argv[2])) << endl;
     
     g.show();
 
