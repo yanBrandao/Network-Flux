@@ -1,3 +1,3 @@
 # Network-Flux
 
-A pratical exercise for Algorithm.
+A pratical exercise for Survey Desing problem using Ford-Fulkerson Algorithm.
